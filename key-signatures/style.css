@@ -685,3 +685,93 @@ input[type="text"] {
     margin-right: auto;
   }
 }
+
+/* Key signature desktop/tablet fit: prevent answer controls from overlapping the prompt. */
+@media (min-width: 1001px) {
+  .screen {
+    width: min(1380px, 100%);
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .topbar {
+    grid-template-columns: minmax(120px, 150px) minmax(260px, 1fr) auto;
+    gap: 12px;
+  }
+
+  .workbench {
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .main-grid {
+    grid-template-columns: minmax(290px, 1fr) minmax(300px, 1fr) minmax(260px, 0.92fr);
+    gap: 14px;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .quiz-left,
+  .quiz-center,
+  .quiz-right {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .display-card,
+  .answer-area,
+  .quick-buttons {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .question-display {
+    font-size: clamp(36px, 4.1vw, 60px);
+    letter-spacing: -0.055em;
+  }
+
+  .answer-input {
+    min-width: 0;
+  }
+
+  .quick-buttons button {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1400px) {
+  .main-grid {
+    grid-template-columns: minmax(300px, 1fr) minmax(320px, 1fr);
+    grid-template-areas:
+      "question prompt"
+      "answer answer";
+    gap: 12px 14px;
+  }
+
+  .quiz-left {
+    grid-area: question;
+  }
+
+  .quiz-center {
+    grid-area: prompt;
+  }
+
+  .quiz-right {
+    grid-area: answer;
+  }
+
+  .quiz-right .answer-area {
+    grid-template-columns: minmax(220px, 0.9fr) minmax(260px, 1fr);
+    align-items: start;
+  }
+
+  .quiz-right .answer-label {
+    grid-column: 1 / -1;
+  }
+
+  .quick-buttons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

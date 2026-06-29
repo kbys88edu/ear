@@ -18,6 +18,17 @@ const keyNames = [
   { pc: 11, majorJa: "ロ長調", minorJa: "ロ短調", majorRoman: "B dur", minorRoman: "b moll", majorSig: "♯5", minorSig: "♯2", majorScale: ["B","C#","D#","E","F#","G#","A#"], minorScale: ["B","C#","D","E","F#","G","A"] }
 ];
 
+const noteNames = {
+  en: {
+    major: ["C", "D-flat", "D", "E-flat", "E", "F", "F-sharp", "G", "A-flat", "A", "B-flat", "B"],
+    minor: ["C", "C-sharp", "D", "E-flat", "E", "F", "F-sharp", "G", "G-sharp", "A", "B-flat", "B"]
+  },
+  fr: {
+    major: ["Do", "Ré bémol", "Ré", "Mi bémol", "Mi", "Fa", "Fa dièse", "Sol", "La bémol", "La", "Si bémol", "Si"],
+    minor: ["Do", "Do dièse", "Ré", "Mi bémol", "Mi", "Fa", "Fa dièse", "Sol", "Sol dièse", "La", "Si bémol", "Si"]
+  }
+};
+
 const basicKeys = [
   { pc: 0, mode: "major" }, { pc: 7, mode: "major" }, { pc: 5, mode: "major" },
   { pc: 2, mode: "major" }, { pc: 10, mode: "major" }, { pc: 9, mode: "minor" },
@@ -78,6 +89,10 @@ document.querySelectorAll('input[name="questionMode"]').forEach((input) => {
   input.addEventListener("change", updateQuestionModeView);
 });
 
+document.addEventListener("earTrainingLanguageChanged", () => {
+  refreshLanguageSensitiveText();
+});
+
 function init() {
   renderRelationOptions();
   setAllRelations(true);
@@ -87,10 +102,15 @@ function init() {
 }
 
 function renderRelationOptions() {
+  const selected = new Set(
+    Array.from(relationOptions.querySelectorAll("input:checked")).map((input) => input.value)
+  );
+  const hadOptions = relationOptions.querySelector("input") !== null;
   relationOptions.innerHTML = "";
   relations.forEach((relation) => {
     const label = document.createElement("label");
-    label.innerHTML = `<input type="checkbox" value="${relation.id}" checked> ${relation.label}`;
+    const checked = !hadOptions || selected.has(relation.id) ? " checked" : "";
+    label.innerHTML = `<input type="checkbox" value="${relation.id}"${checked}> ${t(relation.label)}`;
     relationOptions.appendChild(label);
   });
 }
@@ -107,6 +127,18 @@ function updateQuestionModeView() {
   document.querySelectorAll('input[name="questionMode"]').forEach((input) => {
     input.checked = input.value === "diagram";
   });
+}
+
+function refreshLanguageSensitiveText() {
+  renderRelationOptions();
+  if (currentQuestion) {
+    questionDisplay.textContent = formatKey(currentQuestion.tonic);
+    updateDiagramForQuestion(hasAnsweredCurrentQuestion);
+    redrawPlacedAnswers();
+    renderAnswerBank();
+    if (hasAnsweredCurrentQuestion) showAnswerSummary();
+  }
+  renderHistory();
 }
 
 function getQuestionMode() {
@@ -152,7 +184,7 @@ function newQuestion() {
   updateDiagramForQuestion(false);
   renderAnswerBank();
   questionDisplay.textContent = formatKey(tonic);
-  setStatus(`主調も含め、5つの調名カードを中央の図に配置してください。`);
+  setStatus(t("主調も含め、5つの調名カードを中央の図に配置してください。"));
 }
 
 // Subdominant = IV = perfect fourth above the tonic (+5 semitones).
@@ -258,7 +290,7 @@ function updateDiagramForQuestion(showAnswers) {
     delete box.dataset.answer;
 
     if (!currentQuestion) {
-      box.textContent = slot.label;
+      box.textContent = t(slot.label);
       return;
     }
 
@@ -269,7 +301,7 @@ function updateDiagramForQuestion(showAnswers) {
       return;
     }
 
-    box.innerHTML = `<span class="slot-label">${slot.label}</span><span class="slot-answer">ここへドロップ</span>`;
+    box.innerHTML = `<span class="slot-label">${t(slot.label)}</span><span class="slot-answer">${t("ここへドロップ")}</span>`;
   });
 }
 
@@ -329,7 +361,7 @@ function redrawPlacedAnswers() {
     const answer = placedAnswers[slotId];
     zone.classList.remove("correct", "incorrect");
     if (!answer) {
-      zone.innerHTML = `<span class="slot-label">${slot.label}</span><span class="slot-answer">ここへドロップ</span>`;
+      zone.innerHTML = `<span class="slot-label">${t(slot.label)}</span><span class="slot-answer">${t("ここへドロップ")}</span>`;
       return;
     }
     const key = parseCanonicalKey(answer);
@@ -358,9 +390,9 @@ function applyCheckFeedback(results) {
     zone.classList.toggle("correct", result.ok);
     zone.classList.toggle("incorrect", !result.ok);
     zone.innerHTML = `
-      <span class="slot-label">${result.slot.label}</span>
-      <span class="slot-answer">${answerKey ? formatKey(answerKey) : "未回答"}</span>
-      ${result.ok ? "" : `<span class="slot-correct">正解：${formatKey(parseCanonicalKey(result.correct))}</span>`}
+      <span class="slot-label">${t(result.slot.label)}</span>
+      <span class="slot-answer">${answerKey ? formatKey(answerKey) : t("未回答")}</span>
+      ${result.ok ? "" : `<span class="slot-correct">${t("正解")}：${formatKey(parseCanonicalKey(result.correct))}</span>`}
     `;
   });
 }
@@ -380,25 +412,34 @@ function parseCanonicalKey(value) {
 }
 
 function renderZoneContent(slot, key) {
-  return `<span class="slot-label">${slot.label}</span><span class="slot-answer">${formatKey(key)}</span><span class="slot-roman">${formatKeyRoman(key)}</span>`;
+  return `<span class="slot-label">${t(slot.label)}</span><span class="slot-answer">${formatKey(key)}</span><span class="slot-roman">${formatKeyRoman(key)}</span>`;
 }
 
 function showAnswerSummary() {
   const rows = diagramSlots.map((slot) => {
     const key = getSlotKey(slot.id);
-    return `${slot.label}：${formatKeyDetail(key)}`;
+    return `${t(slot.label)}：${formatKeyDetail(key)}`;
   });
 
-  answerText.textContent = `5マスの正解`;
+  answerText.textContent = t("5マスの正解");
   answerMap.innerHTML = rows.map((row) => `<div>${row}</div>`).join("");
+}
+
+function getCurrentLanguage() {
+  return window.EarTrainingLang?.getLanguage?.() || localStorage.getItem("earTrainingLanguage") || "ja";
 }
 
 function formatKey(key) {
   const item = keyNames.find((entry) => entry.pc === key.pc);
+  const lang = getCurrentLanguage();
+  if (lang === "en") return `${noteNames.en[key.mode][key.pc]} ${key.mode}`;
+  if (lang === "fr") return `${noteNames.fr[key.mode][key.pc]} ${key.mode === "major" ? "majeur" : "mineur"}`;
   return key.mode === "major" ? item.majorJa : item.minorJa;
 }
 
 function formatKeyRoman(key) {
+  const lang = getCurrentLanguage();
+  if (lang === "en" || lang === "fr") return formatKey(key);
   const item = keyNames.find((entry) => entry.pc === key.pc);
   return key.mode === "major" ? item.majorRoman : item.minorRoman;
 }
@@ -415,7 +456,7 @@ function formatDiatonicScale(key) {
 }
 
 function formatKeyDetail(key) {
-  return `${formatKey(key)} / 調号：${formatKeySignature(key)} / 音階：${formatDiatonicScale(key)}`;
+  return `${formatKey(key)} / ${t("調号")}：${formatKeySignature(key)} / ${t("音階")}：${formatDiatonicScale(key)}`;
 }
 
 function canonicalKey(key) {
@@ -493,7 +534,7 @@ function renderHistory() {
     row.className = "history-item";
     row.innerHTML = `
       <span>${String(item.number).padStart(2, "0")}</span>
-      <span>${formatKey(item.tonic)} / ${item.questionMode === "single" ? getRelationLabel(item.targetRelation) : "図全体"} / ${formatResponseTime(item.responseTimeSec)}</span>
+      <span>${formatKey(item.tonic)} / ${item.questionMode === "single" ? t(getRelationLabel(item.targetRelation)) : t("図全体")} / ${formatResponseTime(item.responseTimeSec)}</span>
       <span class="${item.isCorrect ? "ok" : "ng"}">${item.isCorrect ? "OK" : "NG"}</span>
     `;
     historyList.appendChild(row);
