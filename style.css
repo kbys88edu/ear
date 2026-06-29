@@ -101,7 +101,7 @@ h1 {
 }
 
 .tool-card {
-  min-height: 300px;
+  min-height: 220px;
   border: 1px solid var(--soft-line);
   background: var(--panel);
   text-decoration: none;
@@ -120,7 +120,7 @@ h1 {
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.08em;
-  margin-bottom: 34px;
+  margin-bottom: 18px;
 }
 
 .card-main h2 {
@@ -153,6 +153,44 @@ h1 {
   gap: 24px;
   padding-top: 16px;
   font-size: 0.82rem;
+}
+
+@media (min-width: 1101px) {
+  .screen {
+    height: 100vh;
+    min-height: 0;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    gap: 12px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    overflow: hidden;
+  }
+
+  .hub-intro {
+    padding: 14px 0;
+  }
+
+  h1 {
+    margin-top: 4px;
+    font-size: clamp(2.4rem, 5.4vw, 5rem);
+  }
+
+  .tool-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .tool-card {
+    min-height: 0;
+    padding: 14px;
+  }
+
+  .card-main h2 {
+    margin-bottom: 10px;
+    font-size: clamp(1.35rem, 2vw, 2rem);
+  }
 }
 
 @media (max-width: 1100px) {
@@ -206,12 +244,12 @@ h1 {
   }
 
   .tool-card {
-    min-height: 190px;
-    padding: 16px;
+    min-height: 140px;
+    padding: 12px;
   }
 
   .card-number {
-    margin-bottom: 18px;
+    margin-bottom: 8px;
   }
 
   .hub-footer {

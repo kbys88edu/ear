@@ -524,10 +524,10 @@ select {
     width: 100%;
     min-height: 100vh;
     height: auto;
-    padding: 16px 12px 28px;
+    padding: 10px 10px 18px;
     display: grid;
     grid-template-rows: auto;
-    gap: 12px;
+    gap: 8px;
     overflow: visible;
   }
 
@@ -553,7 +553,7 @@ select {
   .bottom-area {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 8px;
   }
 
   .panel,
@@ -566,7 +566,7 @@ select {
   .main-panel,
   .notation-card,
   .history-card {
-    padding: 12px;
+    padding: 9px;
   }
 
   .config-panel {
@@ -614,8 +614,8 @@ select {
   }
 
   .display-card {
-    min-height: 150px;
-    padding: 14px 10px;
+    min-height: 118px;
+    padding: 10px 8px;
   }
 
   .question-display {
@@ -629,51 +629,51 @@ select {
 
   .button-row {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
 
   .button-row button {
-    min-height: 48px;
-    font-size: 0.82rem;
+    min-height: 40px;
+    font-size: 0.76rem;
   }
 
   .score-strip {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
 
   .score-strip div,
   .score-strip button {
-    min-height: 52px;
-    padding: 8px;
+    min-height: 42px;
+    padding: 6px;
   }
 
   #reset-score {
     grid-column: span 2;
-    min-height: 44px;
+    min-height: 36px;
   }
 
   .interval-grid,
   .answer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
+    gap: 5px;
   }
 
   .interval-check {
-    min-height: 42px;
-    padding: 8px;
-    font-size: 0.74rem;
+    min-height: 34px;
+    padding: 6px;
+    font-size: 0.68rem;
   }
 
   .answer-grid button {
-    min-height: 44px;
-    font-size: 0.72rem;
-    padding: 8px 6px;
+    min-height: 36px;
+    font-size: 0.68rem;
+    padding: 6px 5px;
   }
 
   .notation {
     height: auto;
-    min-height: 105px;
+    min-height: 78px;
     overflow-x: auto;
     overflow-y: hidden;
   }
