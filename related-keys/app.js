@@ -36,6 +36,13 @@ const relations = [
   { id: "dominant", label: "属調" },
   { id: "relative", label: "平行調" }
 ];
+const diagramSlots = [
+  { id: "parallel", label: "同主調" },
+  { id: "subdominant", label: "下属調" },
+  { id: "tonic", label: "主調" },
+  { id: "dominant", label: "属調" },
+  { id: "relative", label: "平行調" }
+];
 
 let currentQuestion = null;
 let hasAnsweredCurrentQuestion = false;
@@ -44,6 +51,7 @@ let correctCount = 0;
 let resultLog = [];
 let questionStartTime = null;
 let latestResponseTimeSec = null;
+let placedAnswers = {};
 
 const relationOptions = document.querySelector("#relation-options");
 const statusEl = document.querySelector("#status");
@@ -56,10 +64,7 @@ const scorePercentEl = document.querySelector("#score-percent");
 const currentTimeEl = document.querySelector("#current-time");
 const progressCountEl = document.querySelector("#progress-count");
 const historyList = document.querySelector("#history-list");
-const answerInput = document.querySelector("#answer-input");
-const quickButtons = document.querySelector("#quick-buttons");
-const singleAnswerArea = document.querySelector("#single-answer-area");
-const diagramAnswerArea = document.querySelector("#diagram-answer-area");
+const answerBank = document.querySelector("#answer-bank");
 
 document.querySelector("#new-question").addEventListener("click", newQuestion);
 document.querySelector("#check-answer").addEventListener("click", checkAnswer);
@@ -68,12 +73,6 @@ document.querySelector("#reset-score").addEventListener("click", resetScore);
 document.querySelector("#export-pdf").addEventListener("click", exportResultsPdf);
 document.querySelector("#select-all-relations").addEventListener("click", () => setAllRelations(true));
 document.querySelector("#clear-all-relations").addEventListener("click", () => setAllRelations(false));
-
-answerInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    checkAnswer();
-  }
-});
 
 document.querySelectorAll('input[name="questionMode"]').forEach((input) => {
   input.addEventListener("change", updateQuestionModeView);
@@ -84,6 +83,7 @@ function init() {
   setAllRelations(true);
   updateScore();
   updateQuestionModeView();
+  setupDropZones();
 }
 
 function renderRelationOptions() {
@@ -104,9 +104,9 @@ function setAllRelations(checked) {
 }
 
 function updateQuestionModeView() {
-  const mode = getQuestionMode();
-  singleAnswerArea.classList.toggle("hidden", mode !== "single");
-  diagramAnswerArea.classList.toggle("hidden", mode !== "diagram");
+  document.querySelectorAll('input[name="questionMode"]').forEach((input) => {
+    input.checked = input.value === "diagram";
+  });
 }
 
 function getQuestionMode() {
@@ -128,44 +128,31 @@ function randomItem(array) {
 function newQuestion() {
   const selectedRelations = getSelectedRelations();
 
-  if (getQuestionMode() === "single" && selectedRelations.length === 0) {
-    setStatus(t("関係を1つ以上選択してください。"), "incorrect");
-    return;
-  }
-
   clearFeedback();
 
   const tonic = randomItem(getKeyPool());
   const map = buildRelatedKeyMap(tonic);
-  const targetRelation = getQuestionMode() === "single" ? randomItem(selectedRelations) : null;
 
   currentQuestion = {
     number: totalCount + 1,
     tonic,
     map,
-    targetRelation,
-    questionMode: getQuestionMode()
+    targetRelation: null,
+    questionMode: "diagram"
   };
 
   hasAnsweredCurrentQuestion = false;
+  placedAnswers = {};
   questionStartTime = performance.now();
   latestResponseTimeSec = null;
   currentTimeEl.textContent = "0.0s";
   answerText.textContent = "";
   answerMap.innerHTML = "";
-  answerInput.value = "";
-  document.querySelectorAll("[data-answer-slot]").forEach((input) => input.value = "");
 
   updateDiagramForQuestion(false);
-  renderQuickButtons();
+  renderAnswerBank();
   questionDisplay.textContent = formatKey(tonic);
-
-  if (currentQuestion.questionMode === "single") {
-    const label = relations.find((relation) => relation.id === targetRelation)?.label || "";
-    setStatus(`主調：${formatKey(tonic)}。${label}を答えてください。`);
-  } else {
-    setStatus(`主調：${formatKey(tonic)}。同主調・下属調・属調・平行調を埋めてください。`);
-  }
+  setStatus(`主調も含め、5つの調名カードを中央の図に配置してください。`);
 }
 
 // Subdominant = IV = perfect fourth above the tonic (+5 semitones).
@@ -212,28 +199,10 @@ function checkAnswer() {
     ? Math.max(0, (performance.now() - questionStartTime) / 1000)
     : null;
 
-  let isCorrect = false;
-  let detail = "";
-
-  if (currentQuestion.questionMode === "single") {
-    const correctKey = currentQuestion.map[currentQuestion.targetRelation];
-    isCorrect = normalizeKeyAnswer(answerInput.value) === canonicalKey(correctKey);
-    detail = `${getRelationLabel(currentQuestion.targetRelation)}：${formatKeyDetail(correctKey)} / 回答：${answerInput.value || "-"}`;
-  } else {
-    const results = [];
-    let correctCountForDiagram = 0;
-
-    relations.forEach((relation) => {
-      const input = document.querySelector(`[data-answer-slot="${relation.id}"]`);
-      const correctKey = currentQuestion.map[relation.id];
-      const ok = normalizeKeyAnswer(input.value) === canonicalKey(correctKey);
-      if (ok) correctCountForDiagram += 1;
-      results.push(`${relation.label}:${ok ? "OK" : "NG"}`);
-    });
-
-    isCorrect = correctCountForDiagram === relations.length;
-    detail = `${correctCountForDiagram}/${relations.length} correct`;
-  }
+  const results = scorePlacedAnswers();
+  const correctCountForDiagram = results.filter((item) => item.ok).length;
+  const isCorrect = correctCountForDiagram === diagramSlots.length;
+  const detail = `${correctCountForDiagram}/${diagramSlots.length} correct`;
 
   hasAnsweredCurrentQuestion = true;
   totalCount += 1;
@@ -251,13 +220,14 @@ function checkAnswer() {
     targetRelation: currentQuestion.targetRelation,
     questionMode: currentQuestion.questionMode,
     map: currentQuestion.map,
-    userAnswer: currentQuestion.questionMode === "single" ? answerInput.value : "diagram",
+    userAnswer: JSON.stringify(placedAnswers),
     detail,
     isCorrect,
     responseTimeSec: latestResponseTimeSec
   });
 
-  updateDiagramForQuestion(true);
+  applyCheckFeedback(results);
+  showAnswerSummary();
   updateScore();
   renderHistory();
 }
@@ -269,77 +239,158 @@ function showAnswer() {
   }
 
   updateDiagramForQuestion(true);
-
-  const rows = relations.map((relation) => {
-    const key = currentQuestion.map[relation.id];
-    return `${relation.label}：${formatKeyDetail(key)}`;
+  diagramSlots.forEach((slot) => {
+    const zone = document.querySelector(`[data-drop-slot="${slot.id}"]`);
+    const key = getSlotKey(slot.id);
+    zone.dataset.answer = canonicalKey(key);
+    zone.classList.remove("incorrect");
+    zone.classList.add("correct");
+    zone.innerHTML = renderZoneContent(slot, key);
   });
-
-  answerText.textContent = `主調：${formatKeyDetail(currentQuestion.tonic)}`;
-  answerMap.innerHTML = rows.map((row) => `<div>${row}</div>`).join("");
+  showAnswerSummary();
 }
 
 function updateDiagramForQuestion(showAnswers) {
-  document.querySelectorAll("[data-slot]").forEach((box) => {
-    const slot = box.dataset.slot;
-    box.classList.remove("target", "correct", "incorrect");
+  document.querySelectorAll("[data-drop-slot]").forEach((box) => {
+    const slotId = box.dataset.dropSlot;
+    const slot = diagramSlots.find((item) => item.id === slotId);
+    box.classList.remove("target", "correct", "incorrect", "drag-over");
+    delete box.dataset.answer;
 
     if (!currentQuestion) {
-      if (slot === "tonic") box.textContent = "主調";
-      return;
-    }
-
-    if (slot === "tonic") {
-      box.textContent = formatKey(currentQuestion.tonic);
+      box.textContent = slot.label;
       return;
     }
 
     if (showAnswers) {
-      box.textContent = formatKey(currentQuestion.map[slot]);
-    } else {
-      if (slot === currentQuestion.targetRelation) {
-        box.textContent = "?";
-        box.classList.add("target");
-      } else {
-        box.textContent = getRelationLabel(slot);
-      }
+      const key = getSlotKey(slotId);
+      box.dataset.answer = canonicalKey(key);
+      box.innerHTML = renderZoneContent(slot, key);
+      return;
     }
+
+    box.innerHTML = `<span class="slot-label">${slot.label}</span><span class="slot-answer">ここへドロップ</span>`;
   });
 }
 
-function renderQuickButtons() {
-  quickButtons.innerHTML = "";
+function renderAnswerBank() {
+  answerBank.innerHTML = "";
+  if (!currentQuestion) return;
 
-  if (!currentQuestion || currentQuestion.questionMode !== "single") return;
+  const cards = diagramSlots.map((slot) => {
+    const key = getSlotKey(slot.id);
+    return { id: canonicalKey(key), label: formatKey(key), detail: formatKeyRoman(key) };
+  }).sort(() => Math.random() - 0.5);
 
-  const candidates = makeQuickCandidates();
-  candidates.forEach((key) => {
+  cards.forEach((card) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = formatKey(key);
-    button.addEventListener("click", () => {
-      answerInput.value = formatKey(key);
+    button.className = "answer-card";
+    button.draggable = true;
+    button.dataset.answer = card.id;
+    button.innerHTML = `<span>${card.label}</span><small>${card.detail}</small>`;
+    button.addEventListener("dragstart", (event) => {
+      event.dataTransfer.setData("text/plain", card.id);
+      event.dataTransfer.effectAllowed = "move";
     });
-    quickButtons.appendChild(button);
+    answerBank.appendChild(button);
   });
 }
 
-function makeQuickCandidates() {
-  const correct = currentQuestion.map[currentQuestion.targetRelation];
-  const pool = [correct];
+function setupDropZones() {
+  document.querySelectorAll("[data-drop-slot]").forEach((zone) => {
+    zone.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      zone.classList.add("drag-over");
+    });
+    zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+    zone.addEventListener("drop", (event) => {
+      event.preventDefault();
+      zone.classList.remove("drag-over");
+      const answer = event.dataTransfer.getData("text/plain");
+      if (!answer || !currentQuestion || hasAnsweredCurrentQuestion) return;
+      placeAnswer(zone.dataset.dropSlot, answer);
+    });
+  });
+}
 
-  while (pool.length < 6) {
-    const candidate = randomItem(getKeyPool());
-    if (!pool.some((key) => canonicalKey(key) === canonicalKey(candidate))) {
-      pool.push(candidate);
+function placeAnswer(slotId, answer) {
+  Object.keys(placedAnswers).forEach((key) => {
+    if (placedAnswers[key] === answer) delete placedAnswers[key];
+  });
+  placedAnswers[slotId] = answer;
+  redrawPlacedAnswers();
+}
+
+function redrawPlacedAnswers() {
+  document.querySelectorAll("[data-drop-slot]").forEach((zone) => {
+    const slotId = zone.dataset.dropSlot;
+    const slot = diagramSlots.find((item) => item.id === slotId);
+    const answer = placedAnswers[slotId];
+    zone.classList.remove("correct", "incorrect");
+    if (!answer) {
+      zone.innerHTML = `<span class="slot-label">${slot.label}</span><span class="slot-answer">ここへドロップ</span>`;
+      return;
     }
-  }
+    const key = parseCanonicalKey(answer);
+    zone.dataset.answer = answer;
+    zone.innerHTML = renderZoneContent(slot, key);
+  });
+}
 
-  return pool.sort(() => Math.random() - 0.5);
+function scorePlacedAnswers() {
+  return diagramSlots.map((slot) => {
+    const correctKey = getSlotKey(slot.id);
+    const answer = placedAnswers[slot.id] || "";
+    return {
+      slot,
+      answer,
+      correct: canonicalKey(correctKey),
+      ok: answer === canonicalKey(correctKey)
+    };
+  });
+}
+
+function applyCheckFeedback(results) {
+  results.forEach((result) => {
+    const zone = document.querySelector(`[data-drop-slot="${result.slot.id}"]`);
+    const answerKey = result.answer ? parseCanonicalKey(result.answer) : null;
+    zone.classList.toggle("correct", result.ok);
+    zone.classList.toggle("incorrect", !result.ok);
+    zone.innerHTML = `
+      <span class="slot-label">${result.slot.label}</span>
+      <span class="slot-answer">${answerKey ? formatKey(answerKey) : "未回答"}</span>
+      ${result.ok ? "" : `<span class="slot-correct">正解：${formatKey(parseCanonicalKey(result.correct))}</span>`}
+    `;
+  });
 }
 
 function getRelationLabel(id) {
+  if (id === "tonic") return "主調";
   return relations.find((relation) => relation.id === id)?.label || id;
+}
+
+function getSlotKey(slotId) {
+  return slotId === "tonic" ? currentQuestion.tonic : currentQuestion.map[slotId];
+}
+
+function parseCanonicalKey(value) {
+  const [pc, mode] = String(value).split(":");
+  return { pc: Number(pc), mode };
+}
+
+function renderZoneContent(slot, key) {
+  return `<span class="slot-label">${slot.label}</span><span class="slot-answer">${formatKey(key)}</span><span class="slot-roman">${formatKeyRoman(key)}</span>`;
+}
+
+function showAnswerSummary() {
+  const rows = diagramSlots.map((slot) => {
+    const key = getSlotKey(slot.id);
+    return `${slot.label}：${formatKeyDetail(key)}`;
+  });
+
+  answerText.textContent = `5マスの正解`;
+  answerMap.innerHTML = rows.map((row) => `<div>${row}</div>`).join("");
 }
 
 function formatKey(key) {
