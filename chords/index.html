@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chord Practice | コードの聞き分け</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20260629-answer" />
   <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -103,6 +103,8 @@
           <button id="export-pdf" type="button">PDF</button>
         </div>
 
+        <div id="answer-text" class="answer-text answer-summary"></div>
+
         <div class="score-strip">
           <div><span>QUESTIONS</span><strong id="total-count">0</strong></div>
           <div><span>CORRECT</span><strong id="correct-count">0</strong></div>
@@ -121,7 +123,6 @@
     <section class="bottom-area">
       <div class="notation-card">
         <div class="panel-title">NOTATION</div>
-        <div id="answer-text" class="answer-text"></div>
         <div id="notation" class="notation"></div>
       </div>
 
@@ -132,7 +133,7 @@
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=20260629-piano"></script>
   <script src="../lang.js"></script>
 </body>
 </html>
