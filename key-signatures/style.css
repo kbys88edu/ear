@@ -718,16 +718,31 @@ input[type="text"] {
     overflow: hidden;
   }
 
+  .quiz-center {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .display-card,
   .answer-area,
   .quick-buttons {
+    min-width: 0;
     width: 100%;
     max-width: 100%;
   }
 
+  .display-card {
+    justify-self: stretch;
+    overflow: hidden;
+  }
+
   .question-display {
+    max-width: 100%;
     font-size: clamp(36px, 4.1vw, 60px);
     letter-spacing: -0.055em;
+  }
+
+  .status {
+    max-width: 100%;
   }
 
   .answer-input {
