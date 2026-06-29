@@ -593,3 +593,53 @@ h1 {
     display: none;
   }
 }
+
+/* Visible large index override: never clip the first row of tool cards. */
+@media (min-width: 1101px) {
+  body {
+    overflow-y: auto;
+  }
+
+  .hub-screen {
+    height: auto !important;
+    min-height: 100vh !important;
+    display: block !important;
+    overflow: visible !important;
+    padding: 24px 32px 40px !important;
+  }
+
+  .hub-screen > * + * {
+    margin-top: 18px;
+  }
+
+  .hub-screen .tool-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-rows: auto !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    align-content: start !important;
+    gap: 12px !important;
+  }
+
+  .hub-screen .tool-card {
+    min-height: 210px !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .hub-screen .card-main,
+  .hub-screen .card-main h2,
+  .hub-screen .card-main p {
+    overflow: visible !important;
+  }
+
+  .hub-screen .hub-intro {
+    overflow: visible !important;
+  }
+
+  .hub-screen h1 {
+    font-size: clamp(2.7rem, 4.8vw, 5rem) !important;
+  }
+}
