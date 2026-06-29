@@ -84,7 +84,7 @@ select {
     margin: 0 auto;
     padding: 10px 16px;
     display: grid;
-    grid-template-rows: 28px 44px minmax(0, 1fr);
+    grid-template-rows: 28px minmax(0, 1fr);
     gap: 6px;
     overflow: hidden;
   }
@@ -169,34 +169,8 @@ select {
     color: var(--bg);
   }
 
-  .brand-zone {
-    width: min(420px, 42vw);
-    justify-self: center;
-    align-self: start;
-    display: grid;
-    gap: 3px;
-  }
 
-  .big-mark {
-    font-size: 34px;
-    font-weight: 900;
-    line-height: 0.72;
-    letter-spacing: -0.08em;
-  }
 
-  .brand-line {
-    height: 5px;
-    background: var(--ink);
-  }
-
-  .brand-sub {
-    justify-self: end;
-    max-width: 260px;
-    text-align: right;
-    font-size: 0.48rem;
-    font-weight: 900;
-    line-height: 1;
-  }
 
   .workbench {
     display: grid;
@@ -693,29 +667,8 @@ select {
     color: var(--bg);
   }
 
-  .brand-zone {
-    width: 100%;
-    display: grid;
-    gap: 7px;
-  }
 
-  .big-mark {
-    font-size: clamp(42px, 20vw, 76px);
-    font-weight: 900;
-    line-height: 0.8;
-    letter-spacing: -0.08em;
-  }
 
-  .brand-line {
-    height: 10px;
-    background: var(--ink);
-  }
-
-  .brand-sub {
-    justify-self: start;
-    font-size: 0.56rem;
-    font-weight: 900;
-  }
 
   .workbench {
     display: flex;

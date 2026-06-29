@@ -32,7 +32,7 @@ a {
   margin: 0 auto;
   padding: 28px 48px 34px;
   display: grid;
-  grid-template-rows: 42px 130px auto 1fr auto;
+  grid-template-rows: 42px auto 1fr auto;
   gap: 18px;
   overflow-x: hidden;
 }
@@ -64,35 +64,8 @@ a {
   letter-spacing: 0.08em;
 }
 
-.brand-zone {
-  width: min(640px, 58vw);
-  justify-self: center;
-  align-self: start;
-  display: grid;
-  gap: 10px;
-}
 
-.big-mark {
-  font-size: clamp(52px, 7vw, 82px);
-  font-weight: 900;
-  line-height: 0.72;
-  letter-spacing: -0.08em;
-}
 
-.brand-line {
-  height: 13px;
-  background: var(--ink);
-  width: 100%;
-}
-
-.brand-sub {
-  justify-self: end;
-  max-width: 220px;
-  text-align: right;
-  font-size: 0.62rem;
-  font-weight: 800;
-  line-height: 1.12;
-}
 
 .hub-intro {
   display: grid;
@@ -214,27 +187,8 @@ h1 {
     font-size: 0.72rem;
   }
 
-  .brand-zone {
-    width: 100%;
-    justify-self: stretch;
-    gap: 7px;
-  }
 
-  .big-mark {
-    font-size: clamp(42px, 20vw, 76px);
-    line-height: 0.8;
-  }
 
-  .brand-line {
-    height: 10px;
-  }
-
-  .brand-sub {
-    justify-self: start;
-    max-width: none;
-    text-align: left;
-    font-size: 0.56rem;
-  }
 
   .hub-intro {
     grid-template-columns: 1fr;
@@ -323,10 +277,6 @@ h1 {
     padding-top: 18px;
     padding-bottom: 18px;
     gap: 10px;
-  }
-
-  .brand-zone {
-    gap: 6px;
   }
 
   .workbench {

@@ -80,7 +80,7 @@ select {
   margin: 0 auto;
   padding: 28px 48px 28px;
   display: grid;
-  grid-template-rows: 42px 130px minmax(280px, auto) minmax(130px, auto);
+  grid-template-rows: 42px minmax(280px, auto) minmax(130px, auto);
   gap: 14px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -115,35 +115,8 @@ select {
   letter-spacing: 0.08em;
 }
 
-.brand-zone {
-  width: min(640px, 58vw);
-  justify-self: center;
-  align-self: start;
-  display: grid;
-  gap: 10px;
-}
 
-.big-mark {
-  font-size: clamp(52px, 7vw, 82px);
-  font-weight: 900;
-  line-height: 0.72;
-  letter-spacing: -0.08em;
-}
 
-.brand-line {
-  height: 13px;
-  background: var(--ink);
-  width: 100%;
-}
-
-.brand-sub {
-  justify-self: end;
-  max-width: 220px;
-  text-align: right;
-  font-size: 0.62rem;
-  font-weight: 800;
-  line-height: 1.12;
-}
 
 .workbench {
   display: grid;
@@ -366,6 +339,10 @@ select {
   overflow: hidden;
 }
 
+.main-panel .notation-card {
+  padding: 8px 10px;
+}
+
 .answer-text {
   min-height: 20px;
   margin: 8px 0 2px;
@@ -375,14 +352,17 @@ select {
 }
 
 .answer-summary {
-  margin: 0;
+  margin: 0 auto;
   min-height: 36px;
   display: flex;
   align-items: center;
+  justify-content: center;
   border: 1px solid var(--soft-line);
   background: rgba(255,255,255,0.22);
   padding: 8px 10px;
   color: var(--ink);
+  text-align: center;
+  width: min(100%, 560px);
 }
 
 .answer-summary:empty {
@@ -440,10 +420,6 @@ select {
     grid-template-columns: 1fr;
   }
 
-  .brand-zone {
-    width: 100%;
-  }
-
   .choice-grid,
   .answer-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -488,27 +464,8 @@ select {
     font-size: 0.72rem;
   }
 
-  .brand-zone {
-    width: 100%;
-    justify-self: stretch;
-    gap: 7px;
-  }
 
-  .big-mark {
-    font-size: clamp(42px, 20vw, 76px);
-    line-height: 0.8;
-  }
 
-  .brand-line {
-    height: 10px;
-  }
-
-  .brand-sub {
-    justify-self: start;
-    max-width: none;
-    text-align: left;
-    font-size: 0.56rem;
-  }
 
   .workbench,
   .main-grid,
@@ -1047,10 +1004,6 @@ button.micro:hover {
     gap: 10px;
   }
 
-  .brand-zone {
-    gap: 6px;
-  }
-
   .workbench {
     gap: 12px;
   }
@@ -1252,5 +1205,215 @@ button.micro:hover {
   .chord-type-grid {
     grid-template-columns: 1fr;
     max-height: none;
+  }
+}
+
+/* Chord mobile task view: keep prompt, actions, answer choices, and export visible first. */
+@media (max-width: 760px) {
+  .screen {
+    padding: 8px;
+    gap: 8px;
+    align-content: start;
+  }
+
+  .topbar {
+    display: none;
+  }
+
+  .chord-workbench {
+    gap: 8px;
+  }
+
+  .chord-workbench .main-panel {
+    order: 1;
+    padding: 9px;
+    gap: 8px;
+    align-content: start;
+  }
+
+  .chord-workbench .answer-panel {
+    order: 2;
+    padding: 9px;
+  }
+
+  .chord-workbench .config-panel {
+    order: 3;
+    padding: 9px;
+    gap: 7px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bottom-area {
+    order: 4;
+    gap: 8px;
+  }
+
+  .display-card {
+    min-height: 92px;
+    padding: 9px;
+  }
+
+  .question-display {
+    margin-top: 4px;
+    font-size: clamp(32px, 13vw, 52px);
+    letter-spacing: 0;
+  }
+
+  .status {
+    margin-top: 6px;
+    min-height: 1.6em;
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  .button-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .button-row button {
+    min-height: 38px;
+    padding: 0.38rem 0.25rem;
+    font-size: 0.66rem;
+  }
+
+  .answer-summary {
+    min-height: 32px;
+    padding: 6px 8px;
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  .score-strip {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .score-strip div,
+  .score-strip button {
+    min-height: 36px;
+    padding: 5px 4px;
+  }
+
+  .score-strip span {
+    font-size: 0.46rem;
+    margin-bottom: 2px;
+  }
+
+  .score-strip strong {
+    font-size: 0.78rem;
+  }
+
+  #reset-score {
+    grid-column: auto;
+    min-height: 36px;
+    font-size: 0.52rem;
+  }
+
+  .answer-panel .panel-title {
+    display: none;
+  }
+
+  .answer-panel .answer-grid {
+    margin-top: 0;
+    gap: 5px;
+  }
+
+  .chord-type-answer-card {
+    min-height: 38px;
+  }
+
+  .chord-type-answer-card .choice-label {
+    font-size: 0.86rem !important;
+  }
+
+  .chord-choice-card {
+    padding: 7px;
+    gap: 4px;
+  }
+
+  .chord-choice-card .choice-name {
+    font-size: 0.9rem;
+  }
+
+  .chord-choice-card .choice-info,
+  .chord-choice-card .choice-tones {
+    font-size: 0.62rem;
+  }
+
+  .choice-notation {
+    max-height: 58px;
+  }
+
+  .config-panel > .panel-title,
+  .chord-range-field {
+    display: none;
+  }
+
+  .config-panel .field {
+    gap: 4px;
+  }
+
+  .config-panel .field-label {
+    font-size: 0.52rem;
+  }
+
+  .mode-stack,
+  .inversion-grid,
+  .preset-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .mode-stack label,
+  .inversion-grid label,
+  button.mini {
+    min-height: 28px;
+    padding: 4px 3px;
+    font-size: 0.56rem;
+  }
+
+  select {
+    min-height: 30px;
+    padding: 0.28rem;
+    font-size: 0.68rem;
+  }
+
+  .notation-card,
+  .history-card {
+    padding: 8px;
+  }
+
+  .notation {
+    min-height: 70px;
+    height: 70px;
+  }
+
+  .history-list {
+    max-height: 96px;
+  }
+
+  .history-card {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .button-row button {
+    font-size: 0.58rem;
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
+  }
+
+  .score-strip span {
+    font-size: 0.42rem;
+  }
+
+  .score-strip strong {
+    font-size: 0.72rem;
+  }
+
+  .answer-panel .answer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

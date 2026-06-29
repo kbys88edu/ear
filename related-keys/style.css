@@ -86,7 +86,7 @@ input[type="text"] {
   margin: 0 auto;
   padding: 28px 48px 28px;
   display: grid;
-  grid-template-rows: 42px 130px minmax(320px, auto) minmax(130px, auto);
+  grid-template-rows: 42px minmax(320px, auto) minmax(130px, auto);
   gap: 14px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -142,35 +142,8 @@ input[type="text"] {
   color: var(--bg);
 }
 
-.brand-zone {
-  width: min(640px, 58vw);
-  justify-self: center;
-  align-self: start;
-  display: grid;
-  gap: 10px;
-}
 
-.big-mark {
-  font-size: clamp(52px, 7vw, 82px);
-  font-weight: 900;
-  line-height: 0.72;
-  letter-spacing: -0.08em;
-}
 
-.brand-line {
-  height: 13px;
-  background: var(--ink);
-  width: 100%;
-}
-
-.brand-sub {
-  justify-self: end;
-  max-width: 220px;
-  text-align: right;
-  font-size: 0.62rem;
-  font-weight: 800;
-  line-height: 1.12;
-}
 
 .workbench {
   display: grid;
@@ -502,10 +475,6 @@ input[type="text"] {
   .bottom-area {
     grid-template-columns: 1fr;
   }
-
-  .brand-zone {
-    width: 100%;
-  }
 }
 
 @media (max-width: 760px) {
@@ -540,27 +509,8 @@ input[type="text"] {
     text-align: left;
   }
 
-  .brand-zone {
-    width: 100%;
-    justify-self: stretch;
-    gap: 7px;
-  }
 
-  .big-mark {
-    font-size: clamp(42px, 20vw, 76px);
-    line-height: 0.8;
-  }
 
-  .brand-line {
-    height: 10px;
-  }
-
-  .brand-sub {
-    justify-self: start;
-    max-width: none;
-    text-align: left;
-    font-size: 0.56rem;
-  }
 
   .workbench {
     display: flex;
@@ -822,10 +772,6 @@ input[type="text"] {
     padding-top: 18px;
     padding-bottom: 18px;
     gap: 10px;
-  }
-
-  .brand-zone {
-    gap: 6px;
   }
 
   .workbench {

@@ -80,7 +80,6 @@ let chordDifficulty = "advanced";
 let currentInstrument = null;
 let currentInstrumentName = null;
 let instrumentLoadPromise = null;
-let clickSynth = null;
 
 const choiceList = document.querySelector("#answer-buttons");
 const statusEl = document.querySelector("#status");
@@ -225,7 +224,13 @@ function applyPreset(preset) {
     input.checked = selected.has(input.value);
   });
 
-  setStatus(preset === "triads" ? "三和音プリセットにしました。" : preset === "sevenths" ? "七和音プリセットにしました。" : "応用プリセットにしました。");
+  const statusMessage = {
+    triads: "三和音プリセットにしました。",
+    sevenths: "七和音プリセットにしました。",
+    advanced: "応用プリセットにしました。"
+  }[preset] || "応用プリセットにしました。";
+
+  setStatus(t(statusMessage));
 }
 
 function selectedModes() {
@@ -490,7 +495,7 @@ async function ensureAudio() {
   const selectedInstrumentName = instrumentSelect.value;
 
   if (currentInstrument && currentInstrumentName === selectedInstrumentName) {
-    return { instrument: currentInstrument, clickSynth: ensureClickSynth() };
+    return { instrument: currentInstrument };
   }
 
   if (!instrumentLoadPromise || currentInstrumentName !== selectedInstrumentName) {
@@ -499,18 +504,7 @@ async function ensureAudio() {
   }
 
   currentInstrument = await instrumentLoadPromise;
-  return { instrument: currentInstrument, clickSynth: ensureClickSynth() };
-}
-
-function ensureClickSynth() {
-  if (clickSynth) return clickSynth;
-
-  clickSynth = new Tone.Synth({
-    oscillator: { type: "square" },
-    envelope: { attack: 0.001, decay: 0.035, sustain: 0, release: 0.01 }
-  }).toDestination();
-  clickSynth.volume.value = -22;
-  return clickSynth;
+  return { instrument: currentInstrument };
 }
 
 async function createInstrument(name) {
@@ -617,9 +611,8 @@ async function playCurrentQuestion() {
   }
 
   let instrument;
-  let clickSynth;
   try {
-    ({ instrument, clickSynth } = await ensureAudio());
+    ({ instrument } = await ensureAudio());
   } catch (error) {
     console.error(error);
     setStatus(t("リアルピアノの読み込みに失敗しました。内蔵音色を選んでください。"), "incorrect");
@@ -639,8 +632,6 @@ async function playCurrentQuestion() {
     latestResponseTimeSec = null;
     currentTimeEl.textContent = "0.0s";
   }
-
-  clickSynth.triggerAttackRelease("C5", "32n", now);
 
   if (currentQuestion.mode === "block") {
     triggerChord(instrument, noteNames, "2n", start);

@@ -76,7 +76,7 @@ select {
   margin: 0 auto;
   padding: 28px 48px 28px;
   display: grid;
-  grid-template-rows: 42px 130px minmax(280px, auto) minmax(130px, auto);
+  grid-template-rows: 42px minmax(280px, auto) minmax(130px, auto);
   gap: 14px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -111,35 +111,8 @@ select {
   letter-spacing: 0.08em;
 }
 
-.brand-zone {
-  width: min(640px, 58vw);
-  justify-self: center;
-  align-self: center;
-  display: grid;
-  gap: 12px;
-}
 
-.big-mark {
-  font-size: clamp(64px, 10vw, 116px);
-  font-weight: 900;
-  line-height: 0.72;
-  letter-spacing: -0.08em;
-}
 
-.brand-line {
-  height: 18px;
-  background: var(--ink);
-  width: 100%;
-}
-
-.brand-sub {
-  justify-self: end;
-  max-width: 210px;
-  text-align: right;
-  font-size: 0.62rem;
-  font-weight: 800;
-  line-height: 1.12;
-}
 
 .workbench {
   display: grid;
@@ -412,10 +385,6 @@ select {
     grid-template-columns: 1fr;
   }
 
-  .brand-zone {
-    width: 100%;
-  }
-
   .interval-grid,
   .answer-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -434,10 +403,6 @@ select {
   height: auto;
   overflow-x: hidden;
   overflow-y: auto;
-}
-
-.brand-zone {
-  align-self: start;
 }
 
 .score-strip {
@@ -474,13 +439,6 @@ select {
     gap: 10px;
   }
 
-  .big-mark {
-    font-size: clamp(52px, 7vw, 82px);
-  }
-
-  .brand-line {
-    height: 13px;
-  }
 
   .main-panel,
   .config-panel {
@@ -553,27 +511,8 @@ select {
     font-size: 0.72rem;
   }
 
-  .brand-zone {
-    width: 100%;
-    justify-self: stretch;
-    gap: 7px;
-  }
 
-  .big-mark {
-    font-size: clamp(42px, 20vw, 76px);
-    line-height: 0.8;
-  }
 
-  .brand-line {
-    height: 10px;
-  }
-
-  .brand-sub {
-    justify-self: start;
-    max-width: none;
-    text-align: left;
-    font-size: 0.56rem;
-  }
 
   .workbench,
   .main-grid,
@@ -1023,10 +962,6 @@ select {
     padding-top: 18px;
     padding-bottom: 18px;
     gap: 10px;
-  }
-
-  .brand-zone {
-    gap: 6px;
   }
 
   .workbench {
