@@ -76,7 +76,7 @@ select {
   margin: 0 auto;
   padding: 28px 48px 28px;
   display: grid;
-  grid-template-rows: 42px minmax(280px, auto) minmax(130px, auto);
+  grid-template-rows: auto minmax(280px, auto) minmax(130px, auto);
   gap: 14px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -435,7 +435,7 @@ select {
   .screen {
     padding-top: 20px;
     padding-bottom: 20px;
-    grid-template-rows: 34px 100px minmax(260px, auto) minmax(110px, auto);
+    grid-template-rows: auto minmax(360px, auto) minmax(110px, auto);
     gap: 10px;
   }
 
@@ -470,6 +470,40 @@ select {
 
   .notation {
     height: 90px;
+  }
+}
+
+/* Interval page layout safety: avoid squeezed columns after the brand row removal. */
+.workbench,
+.main-panel,
+.main-grid,
+.quiz-left,
+.quiz-center,
+.quiz-right {
+  min-height: 0;
+}
+
+.main-panel {
+  overflow: visible;
+}
+
+@media (min-width: 1001px) {
+  .workbench {
+    align-items: stretch;
+  }
+
+  .main-grid {
+    grid-template-columns: minmax(180px, 1fr) minmax(220px, 1.1fr) minmax(190px, 1fr);
+  }
+
+  .quiz-left,
+  .quiz-right {
+    overflow-y: auto;
+    padding-right: 3px;
+  }
+
+  .quiz-center {
+    overflow: visible;
   }
 }
 

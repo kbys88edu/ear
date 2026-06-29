@@ -1,6 +1,11 @@
 .topbar {
-  grid-template-columns: minmax(64px, 120px) minmax(0, 1fr) minmax(600px, max-content);
+  grid-template-columns: minmax(64px, 120px) minmax(0, 1fr) minmax(140px, max-content);
   column-gap: 12px;
+  position: relative;
+  z-index: 2;
+  background: var(--bg, #dedede);
+  border-bottom: 1px solid var(--soft-line, rgba(47, 47, 47, 0.28));
+  padding-bottom: 6px;
 }
 
 .top-copy {
@@ -9,9 +14,9 @@
 
 .top-count {
   justify-self: end;
-  width: min(600px, 100%);
+  width: min(180px, 100%);
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(42px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
   align-items: stretch;
   justify-content: stretch;
   gap: 4px;
@@ -80,7 +85,7 @@
   .top-count {
     justify-self: stretch;
     width: 100%;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
   }
 }
 
@@ -90,7 +95,7 @@
   }
 
   .top-count {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
     gap: 3px;
   }
 
@@ -113,6 +118,6 @@
 
   .top-count .language-toggle,
   .top-count #progress-count {
-    grid-column: span 2;
+    grid-column: auto;
   }
 }
