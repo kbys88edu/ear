@@ -530,3 +530,98 @@ h1 {
 .lang-btn {
   min-width: 28px;
 }
+
+/* Final index layout: keep the PC hub readable instead of squeezing cards into each other. */
+@media (min-width: 1101px) {
+  .hub-screen {
+    height: 100vh;
+    min-height: 0;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 18px 28px;
+    overflow: hidden;
+  }
+
+  .hub-screen .topbar {
+    min-height: 0;
+  }
+
+  .hub-screen .acs-lesson-banner {
+    max-width: 1240px;
+    width: min(1240px, 86vw);
+    margin: 6px auto 8px;
+    padding: 12px 16px;
+    grid-template-columns: minmax(220px, 0.9fr) minmax(340px, 1.4fr) auto;
+    gap: 16px;
+  }
+
+  .hub-screen .hub-intro {
+    padding: 8px 0;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .hub-screen h1 {
+    margin-top: 2px;
+    font-size: clamp(2rem, 3.4vw, 3.4rem);
+    line-height: 0.92;
+  }
+
+  .hub-screen .hub-intro p {
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+
+  .hub-screen .beta-note {
+    max-width: none;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+
+  .hub-screen .tool-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: minmax(104px, 1fr);
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .hub-screen .tool-card {
+    min-height: 0;
+    padding: 10px 12px;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .hub-screen .card-number {
+    margin-bottom: 5px;
+    font-size: 0.62rem;
+  }
+
+  .hub-screen .card-main h2 {
+    margin-bottom: 6px;
+    font-size: clamp(1.05rem, 1.55vw, 1.55rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .hub-screen .card-main p {
+    font-size: 0.70rem;
+    line-height: 1.32;
+  }
+
+  .hub-screen .card-meta {
+    padding-top: 6px;
+    font-size: 0.56rem;
+  }
+
+  .hub-screen .hub-footer {
+    padding-top: 8px;
+    font-size: 0.76rem;
+  }
+
+  .hub-screen .lesson-footer-cta {
+    display: none;
+  }
+}
