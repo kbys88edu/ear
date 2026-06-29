@@ -85,6 +85,26 @@ h1 {
   font-weight: 900;
 }
 
+.hub-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.beta-inline {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 14px;
+  border: 1px solid var(--soft-line);
+  padding: 3px 6px;
+  font-size: 0.56rem;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
 .hub-intro p,
 .hub-footer p,
 .tool-card p {
@@ -350,42 +370,6 @@ h1 {
 }
 
 
-.beta-note {
-  max-width: 1120px;
-  margin: 12px auto 16px;
-  padding: 8px 10px;
-  border: 1px solid rgba(0, 0, 0, 0.22);
-  background: rgba(255, 255, 255, 0.38);
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  font-size: 11px;
-  line-height: 1.45;
-}
-
-.beta-note strong {
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-  font-size: 10.5px;
-}
-
-.beta-note span {
-  opacity: 0.82;
-}
-
-@media (max-width: 720px) {
-  .beta-note {
-    margin: 14px 12px 18px;
-    display: block;
-  }
-
-  .beta-note strong {
-    display: block;
-    margin-bottom: 4px;
-  }
-}
-
-
 /* atelier composition son lesson lead */
 .acs-lesson-banner {
   max-width: 1120px;
@@ -565,11 +549,6 @@ h1 {
     line-height: 0.9;
   }
 
-  .hub-screen .beta-note {
-    max-width: none;
-    margin: 0;
-  }
-
   .hub-screen .tool-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
@@ -577,18 +556,30 @@ h1 {
   }
 
   .hub-screen .tool-card {
-    min-height: 220px;
-    padding: 16px;
+    min-height: 174px;
+    padding: 12px;
   }
 
   .hub-screen .card-number {
-    margin-bottom: 18px;
+    margin-bottom: 10px;
+    font-size: 0.62rem;
   }
 
   .hub-screen .card-main h2 {
-    font-size: clamp(1.35rem, 2.1vw, 2.2rem);
+    margin-bottom: 8px;
+    font-size: clamp(1.2rem, 1.75vw, 1.76rem);
     line-height: 0.98;
     letter-spacing: -0.045em;
+  }
+
+  .hub-screen .card-main p {
+    font-size: 0.74rem;
+    line-height: 1.42;
+  }
+
+  .hub-screen .card-meta {
+    padding-top: 8px;
+    font-size: 0.6rem;
   }
 
   .hub-screen .lesson-footer-cta {
