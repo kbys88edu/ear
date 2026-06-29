@@ -1,0 +1,118 @@
+.topbar {
+  grid-template-columns: minmax(64px, 120px) minmax(0, 1fr) minmax(600px, max-content);
+  column-gap: 12px;
+}
+
+.top-copy {
+  min-width: 0;
+}
+
+.top-count {
+  justify-self: end;
+  width: min(600px, 100%);
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(42px, 1fr));
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 4px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.top-count .tool-link,
+.top-count #progress-count,
+.top-count .language-toggle {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 22px;
+  margin: 0;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-count .tool-link {
+  font-size: 0.58rem;
+}
+
+.top-count #progress-count {
+  border: 1px solid transparent;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.top-count .language-toggle {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0;
+}
+
+.top-count .lang-btn {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 0 3px;
+  font-size: 0.54rem;
+  line-height: 1;
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+
+  .top-item {
+    justify-self: start;
+  }
+
+  .top-copy {
+    display: none;
+  }
+
+  .top-count {
+    justify-self: stretch;
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar {
+    row-gap: 6px;
+  }
+
+  .top-count {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .top-count .tool-link,
+  .top-count #progress-count,
+  .top-count .language-toggle {
+    height: 18px;
+    padding: 0 2px;
+  }
+
+  .top-count .tool-link,
+  .top-count #progress-count {
+    font-size: 0.46rem;
+  }
+
+  .top-count .lang-btn {
+    padding: 0 1px;
+    font-size: 0.45rem;
+  }
+
+  .top-count .language-toggle,
+  .top-count #progress-count {
+    grid-column: span 2;
+  }
+}
