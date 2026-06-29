@@ -101,13 +101,13 @@ h1 {
 }
 
 .tool-card {
-  min-height: 220px;
+  min-height: 188px;
   border: 1px solid var(--soft-line);
   background: var(--panel);
   text-decoration: none;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  padding: 18px;
+  padding: 14px;
   transition: transform 0.12s ease, background 0.12s ease;
 }
 
@@ -117,31 +117,32 @@ h1 {
 }
 
 .card-number {
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   font-weight: 900;
   letter-spacing: 0.08em;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .card-main h2 {
-  margin: 0 0 16px;
-  font-size: clamp(1.5rem, 2.7vw, 2.6rem);
+  margin: 0 0 10px;
+  font-size: clamp(1.28rem, 2.25vw, 2.2rem);
   line-height: 0.95;
   letter-spacing: -0.07em;
   font-weight: 900;
 }
 
 .card-main p {
-  font-size: 0.86rem;
+  font-size: 0.76rem;
+  line-height: 1.48;
 }
 
 .card-meta {
   border-top: 1px dashed var(--soft-line);
-  padding-top: 12px;
+  padding-top: 9px;
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 900;
   letter-spacing: 0.06em;
 }
@@ -351,20 +352,21 @@ h1 {
 
 .beta-note {
   max-width: 1120px;
-  margin: 18px auto 22px;
-  padding: 12px 14px;
+  margin: 12px auto 16px;
+  padding: 8px 10px;
   border: 1px solid rgba(0, 0, 0, 0.22);
   background: rgba(255, 255, 255, 0.38);
   display: flex;
-  gap: 14px;
+  gap: 10px;
   align-items: baseline;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 .beta-note strong {
   letter-spacing: 0.08em;
   white-space: nowrap;
+  font-size: 10.5px;
 }
 
 .beta-note span {
@@ -624,9 +626,32 @@ h1 {
   }
 
   .hub-screen .tool-card {
-    min-height: 210px !important;
+    min-height: 174px !important;
     height: auto !important;
+    padding: 12px !important;
     overflow: visible !important;
+  }
+
+  .hub-screen .card-number {
+    margin-bottom: 10px !important;
+    font-size: 0.62rem !important;
+  }
+
+  .hub-screen .card-main h2 {
+    margin-bottom: 8px !important;
+    font-size: clamp(1.2rem, 1.75vw, 1.76rem) !important;
+    line-height: 0.98 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .hub-screen .card-main p {
+    font-size: 0.74rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .hub-screen .card-meta {
+    padding-top: 8px !important;
+    font-size: 0.6rem !important;
   }
 
   .hub-screen .card-main,
