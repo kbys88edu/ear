@@ -235,6 +235,7 @@ function checkAnswer() {
   const correctCountForDiagram = results.filter((item) => item.ok).length;
   const isCorrect = correctCountForDiagram === diagramSlots.length;
   const detail = `${correctCountForDiagram}/${diagramSlots.length} correct`;
+  const displayDetail = `${correctCountForDiagram}/${diagramSlots.length} ${t("正解")}`;
 
   hasAnsweredCurrentQuestion = true;
   totalCount += 1;
@@ -242,7 +243,7 @@ function checkAnswer() {
 
   currentTimeEl.textContent = formatResponseTime(latestResponseTimeSec);
   setStatus(
-    `${isCorrect ? "正解" : "不正解"} / ${detail} / ${formatResponseTime(latestResponseTimeSec)}`,
+    `${t(isCorrect ? "正解" : "不正解")} / ${displayDetail} / ${formatResponseTime(latestResponseTimeSec)}`,
     isCorrect ? "correct" : "incorrect"
   );
 
@@ -459,6 +460,34 @@ function formatKeyDetail(key) {
   return `${formatKey(key)} / ${t("調号")}：${formatKeySignature(key)} / ${t("音階")}：${formatDiatonicScale(key)}`;
 }
 
+function formatKeyPdf(key) {
+  const item = keyNames.find((entry) => entry.pc === key.pc);
+  const root = key.mode === "major" ? item.majorScale[0] : item.minorScale[0];
+  return `${root} ${key.mode}`;
+}
+
+function formatKeySignaturePdf(key) {
+  return formatKeySignature(key)
+    .replace("調号なし", "none")
+    .replace(/♯/g, "#")
+    .replace(/♭/g, "b");
+}
+
+function formatDiatonicScalePdf(key) {
+  return formatDiatonicScale(key).replace(/♯/g, "#").replace(/♭/g, "b");
+}
+
+function formatRelationPdf(id) {
+  const labels = {
+    tonic: "Tonic key",
+    parallel: "Parallel key",
+    subdominant: "Subdominant key",
+    dominant: "Dominant key",
+    relative: "Relative key"
+  };
+  return labels[id] || id;
+}
+
 function canonicalKey(key) {
   return `${key.pc}:${key.mode}`;
 }
@@ -596,22 +625,22 @@ async function exportResultsPdf() {
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10);
-      doc.text(`${String(item.number).padStart(2, "0")}  Tonic: ${formatKeyRoman(item.tonic)}  ${item.questionMode}`, 16, y);
+      doc.text(`${String(item.number).padStart(2, "0")}  Tonic: ${formatKeyPdf(item.tonic)}  ${item.questionMode}`, 16, y);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9);
       doc.text(`${item.isCorrect ? "OK" : "NG"} / Time: ${formatResponseTime(item.responseTimeSec)} / ${item.detail}`, 16, y + 6);
 
-      const lines = relations.map((relation) => {
-        const key = item.map[relation.id];
-        return `${relation.label}: ${formatKeyRoman(key)} / Signature: ${formatKeySignature(key)} / Scale: ${formatDiatonicScale(key)}`;
+      const lines = diagramSlots.map((slot) => {
+        const key = slot.id === "tonic" ? item.tonic : item.map[slot.id];
+        return `${formatRelationPdf(slot.id)}: ${formatKeyPdf(key)} / Signature: ${formatKeySignaturePdf(key)} / Scale: ${formatDiatonicScalePdf(key)}`;
       });
 
       lines.forEach((line, index) => {
         doc.text(line, 18, y + 14 + index * 5);
       });
 
-      y += 58;
+      y += 64;
     });
 
     doc.save("related-key-practice-result.pdf");

@@ -373,20 +373,20 @@ h1 {
 /* atelier composition son lesson lead */
 .acs-lesson-banner {
   max-width: 1120px;
-  margin: 20px auto 24px;
-  padding: 18px;
+  margin: 14px auto 18px;
+  padding: 12px 14px;
   border: 1px solid rgba(0, 0, 0, 0.28);
   background: rgba(255, 255, 255, 0.48);
   display: grid;
-  grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.4fr) auto;
-  gap: 18px;
+  grid-template-columns: minmax(220px, 0.86fr) minmax(280px, 1.3fr) auto;
+  gap: 14px;
   align-items: center;
 }
 
 .acs-logo-block {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -404,25 +404,25 @@ h1 {
 }
 
 .acs-name {
-  font-size: 18px;
+  font-size: 14px;
   letter-spacing: -0.03em;
   font-weight: 700;
   text-transform: lowercase;
 }
 
 .acs-sub {
-  margin-top: 4px;
-  font-size: 11px;
-  line-height: 1.4;
+  margin-top: 3px;
+  font-size: 9px;
+  line-height: 1.3;
   opacity: 0.68;
   text-transform: lowercase;
 }
 
 .acs-lesson-copy {
   display: grid;
-  gap: 6px;
-  font-size: 13px;
-  line-height: 1.65;
+  gap: 4px;
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 .acs-lesson-copy span {
@@ -431,7 +431,7 @@ h1 {
 
 .acs-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   justify-content: flex-end;
 }
@@ -440,12 +440,12 @@ h1 {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  min-height: 38px;
-  padding: 0 14px;
+  min-height: 30px;
+  padding: 0 10px;
   border: 1px solid currentColor;
   text-decoration: none;
   color: inherit;
-  font-size: 12px;
+  font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -484,8 +484,8 @@ h1 {
 }
 
 .acs-logo-image {
-  width: 58px;
-  height: 58px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   display: block;
   flex: 0 0 auto;
@@ -536,8 +536,8 @@ h1 {
   .hub-screen .acs-lesson-banner {
     max-width: 1240px;
     width: min(1240px, 84vw);
-    margin: 20px auto 26px;
-    grid-template-columns: minmax(220px, 0.9fr) minmax(340px, 1.4fr) auto;
+    margin: 14px auto 18px;
+    grid-template-columns: minmax(200px, 0.82fr) minmax(300px, 1.35fr) auto;
   }
 
   .hub-screen .hub-intro {
