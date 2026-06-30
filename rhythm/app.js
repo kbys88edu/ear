@@ -124,7 +124,7 @@ document.querySelector("#export-pdf").addEventListener("click", exportResultsPdf
 
 function init() {
   updateScore();
-  setStatus("NEW を押して、演奏されたリズムを3つの譜例から選んでください。");
+  setStatus("NEW を押して、演奏されたリズムを4つの譜例から選んでください。");
 }
 
 function getSelectedValues(name) {
@@ -156,8 +156,8 @@ function shuffle(array) {
 function newQuestion() {
   const pool = getPool();
 
-  if (pool.length < 3) {
-    setStatus("3択を作るには候補が足りません。拍子または内容を増やしてください。", "incorrect");
+  if (pool.length < 4) {
+    setStatus("4択を作るには候補が足りません。拍子または内容を増やしてください。", "incorrect");
     return;
   }
 
@@ -166,12 +166,12 @@ function newQuestion() {
   const correct = randomItem(pool);
   const sameMeterPool = pool.filter((pattern) => pattern.meter === correct.meter && pattern.id !== correct.id);
 
-  if (sameMeterPool.length < 2) {
-    setStatus(`${correct.meter} の候補が足りません。同じ拍子で3択を作るため、内容設定を増やしてください。`, "incorrect");
+  if (sameMeterPool.length < 3) {
+    setStatus(`${correct.meter} の候補が足りません。同じ拍子で4択を作るため、内容設定を増やしてください。`, "incorrect");
     return;
   }
 
-  const distractors = chooseSimilarDistractors(correct, sameMeterPool, 2);
+  const distractors = chooseSimilarDistractors(correct, sameMeterPool, 3);
   const choices = shuffle([correct, ...distractors]);
 
   currentQuestion = {
