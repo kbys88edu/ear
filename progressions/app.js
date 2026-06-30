@@ -153,26 +153,17 @@ function newQuestion() {
   const keyContext = chooseKeyContext(correctTemplate.tonality);
   const chordCount = correctTemplate.chords.length;
 
-  let distractorPool = pool.filter((item) =>
-    item.id !== correctTemplate.id &&
-    item.tonality === correctTemplate.tonality &&
-    item.chords.length === chordCount
-  );
+  const distractorTemplates = getCloseDistractorTemplates(correctTemplate, pool);
 
-  if (distractorPool.length < 2) {
-    distractorPool = pool.filter((item) => item.id !== correctTemplate.id && item.tonality === correctTemplate.tonality);
-  }
-
-  if (distractorPool.length < 2) {
+  if (distractorTemplates.length < 2) {
     setStatus("3択の候補が不足しています。設定を増やしてください。", "incorrect");
     return;
   }
 
-  const distractorTemplates = shuffle(distractorPool).slice(0, 2);
   const correct = buildChoice(correctTemplate, keyContext);
   const choices = shuffle([
     correct,
-    ...distractorTemplates.map((template) => buildChoice(template, keyContext))
+    ...distractorTemplates.slice(0, 2).map((template) => buildChoice(template, keyContext))
   ]);
 
   currentQuestion = {
@@ -217,6 +208,157 @@ function chooseKeyContext(tonality) {
     : (tonality === "major" ? whiteMajorKeys : whiteMinorKeys);
 
   return keyContexts[randomItem(ids)];
+}
+
+function getCloseDistractorTemplates(correctTemplate, pool) {
+  const generated = generateNearProgressionVariants(correctTemplate);
+  const existing = pool
+    .filter((item) => item.id !== correctTemplate.id && item.tonality === correctTemplate.tonality)
+    .map((item) => ({ item, score: progressionDistance(correctTemplate, item) }))
+    .sort((a, b) => a.score - b.score)
+    .map(({ item }) => item);
+
+  const seen = new Set([romanKey(correctTemplate)]);
+  const merged = [];
+  [...generated, ...existing].forEach((item) => {
+    const key = romanKey(item);
+    if (seen.has(key)) return;
+    seen.add(key);
+    merged.push(item);
+  });
+
+  return merged;
+}
+
+function generateNearProgressionVariants(template) {
+  const palette = getChordPalette(template.tonality, template.complexity);
+  const variants = [];
+
+  template.chords.forEach((originalChord, index) => {
+    const candidates = palette
+      .filter((candidate) => !sameChordDef(candidate, originalChord))
+      .map((candidate) => ({
+        candidate,
+        score: chordDistance(originalChord, candidate) + (index === template.chords.length - 1 ? 1.4 : 0)
+      }))
+      .sort((a, b) => a.score - b.score)
+      .slice(0, 3);
+
+    candidates.forEach(({ candidate, score }, candidateIndex) => {
+      const chords = template.chords.map((chord, chordIndex) =>
+        chordIndex === index ? stripRomanMeta(candidate) : { ...chord }
+      );
+      const roman = template.roman.map((item, chordIndex) =>
+        chordIndex === index ? candidate.roman : item
+      );
+      variants.push({
+        id: `${template.id}_near_${index}_${candidateIndex}`,
+        tonality: template.tonality,
+        complexity: template.complexity,
+        label: "near variant",
+        roman,
+        chords,
+        nearScore: score
+      });
+    });
+  });
+
+  return variants
+    .sort((a, b) => a.nearScore - b.nearScore)
+    .filter((item, index, array) => array.findIndex((other) => romanKey(other) === romanKey(item)) === index);
+}
+
+function getChordPalette(tonality, complexity) {
+  if (tonality === "major" && complexity === "sevenths") {
+    return [
+      { deg: 1, q: "maj7", roman: "Imaj7" },
+      { deg: 2, q: "min7", roman: "ii7" },
+      { deg: 3, q: "min7", roman: "iii7" },
+      { deg: 4, q: "maj7", roman: "IVmaj7" },
+      { deg: 5, q: "dom7", roman: "V7" },
+      { deg: 6, q: "min7", roman: "vi7" }
+    ];
+  }
+
+  if (tonality === "major") {
+    return [
+      { deg: 1, q: "maj", roman: "I" },
+      { deg: 2, q: "min", roman: "ii" },
+      { deg: 3, q: "min", roman: "iii" },
+      { deg: 4, q: "maj", roman: "IV" },
+      { deg: 5, q: "maj", roman: "V" },
+      { deg: 6, q: "min", roman: "vi" }
+    ];
+  }
+
+  if (complexity === "sevenths") {
+    return [
+      { deg: 1, q: "min7", roman: "i7" },
+      { deg: 2, q: "halfDim7", source: "harmonic", roman: "iiø7" },
+      { deg: 4, q: "min7", roman: "iv7" },
+      { deg: 5, q: "dom7", source: "harmonic", roman: "V7" },
+      { deg: 6, q: "maj7", source: "natural", roman: "♭VImaj7" },
+      { deg: 7, q: "dom7", source: "natural", roman: "♭VII7" }
+    ];
+  }
+
+  return [
+    { deg: 1, q: "min", roman: "i" },
+    { deg: 2, q: "dim", source: "harmonic", roman: "ii°" },
+    { deg: 4, q: "min", roman: "iv" },
+    { deg: 5, q: "maj", source: "harmonic", roman: "V" },
+    { deg: 6, q: "maj", source: "natural", roman: "♭VI" },
+    { deg: 7, q: "maj", source: "natural", roman: "♭VII" }
+  ];
+}
+
+function stripRomanMeta(chord) {
+  const { roman, ...def } = chord;
+  return def;
+}
+
+function romanKey(template) {
+  return template.roman.join("|");
+}
+
+function sameChordDef(a, b) {
+  return a.deg === b.deg && a.q === b.q && (a.source || "") === (b.source || "");
+}
+
+function progressionDistance(a, b) {
+  const lengthPenalty = Math.abs(a.chords.length - b.chords.length) * 5;
+  const count = Math.min(a.chords.length, b.chords.length);
+  let score = lengthPenalty;
+
+  for (let index = 0; index < count; index += 1) {
+    score += chordDistance(a.chords[index], b.chords[index]);
+  }
+
+  if (a.chords.length && b.chords.length && sameChordDef(a.chords[a.chords.length - 1], b.chords[b.chords.length - 1])) {
+    score -= 1.2;
+  }
+
+  return score;
+}
+
+function chordDistance(a, b) {
+  const degreeDistance = Math.min(Math.abs(a.deg - b.deg), 7 - Math.abs(a.deg - b.deg));
+  let score = degreeDistance;
+  if (a.q !== b.q) score += isSameChordFamily(a.q, b.q) ? 0.6 : 1.4;
+  if ((a.source || "") !== (b.source || "")) score += 0.4;
+  return score;
+}
+
+function isSameChordFamily(a, b) {
+  const family = (quality) => {
+    const lower = String(quality || "").toLowerCase();
+    if (lower.includes("maj")) return "major";
+    if (lower.includes("min")) return "minor";
+    if (lower.includes("dim")) return "diminished";
+    if (lower.includes("dom")) return "dominant";
+    return lower;
+  };
+  return family(a) === family(b);
 }
 
 function buildChoice(template, keyContext) {
