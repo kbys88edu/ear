@@ -730,3 +730,61 @@ select {
     margin-right: auto;
   }
 }
+
+/* Mode page fit: keep translated controls inside the settings panel. */
+@media (min-width: 1001px) {
+  .workbench {
+    grid-template-columns: minmax(280px, 306px) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .config-panel,
+  .config-panel .field,
+  .preset-row,
+  .mode-stack,
+  select {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .config-panel {
+    overflow: hidden;
+  }
+
+  select {
+    width: 100%;
+  }
+
+  .preset-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .preset-row.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .preset-row button,
+  .preset-row.three button {
+    min-width: 0;
+    width: 100%;
+    padding-left: 0.28rem;
+    padding-right: 0.28rem;
+    font-size: clamp(0.54rem, 0.68vw, 0.62rem);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.1;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1260px) {
+  .main-grid {
+    grid-template-columns: minmax(250px, 0.9fr) minmax(320px, 1.1fr) minmax(180px, 0.75fr);
+    gap: 14px;
+  }
+
+  .answer-grid button {
+    font-size: 0.62rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+  }
+}
