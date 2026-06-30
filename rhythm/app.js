@@ -416,7 +416,7 @@ function renderChoices() {
     choiceList.appendChild(card);
 
     requestAnimationFrame(() => {
-      renderAbc(`choice-notation-${index}`, buildAbc(choice), 270);
+      renderAbc(`choice-notation-${index}`, buildAbc(choice), 220);
     });
   });
 }
