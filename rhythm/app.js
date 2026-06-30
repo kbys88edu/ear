@@ -198,12 +198,164 @@ function newQuestion() {
 }
 
 function chooseSimilarDistractors(correct, candidates, count) {
+  const generated = generateNearRhythmVariants(correct);
+  if (generated.length >= count) {
+    return shuffle(generated.slice(0, Math.min(8, generated.length))).slice(0, count);
+  }
+
   const ranked = candidates
     .map((candidate) => ({ candidate, score: rhythmSimilarityScore(correct, candidate) }))
     .sort((a, b) => a.score - b.score);
 
   const closeGroup = ranked.slice(0, Math.min(8, ranked.length)).map((item) => item.candidate);
-  return shuffle(closeGroup).slice(0, count);
+  const seen = new Set([rhythmKey(correct), ...generated.map(rhythmKey)]);
+  const merged = generated.slice();
+  closeGroup.forEach((candidate) => {
+    const key = rhythmKey(candidate);
+    if (seen.has(key)) return;
+    seen.add(key);
+    merged.push(candidate);
+  });
+
+  return shuffle(merged.slice(0, Math.min(8, merged.length))).slice(0, count);
+}
+
+function generateNearRhythmVariants(correct) {
+  const replacements = getGroupReplacementMap(correct.meter);
+  const variants = [];
+
+  correct.beamGroups.forEach((group, groupIndex) => {
+    const key = group.join("");
+    const candidates = replacements[key] || [];
+    candidates.forEach((replacement, replacementIndex) => {
+      const beamGroups = correct.beamGroups.map((item, index) =>
+        index === groupIndex ? [replacement] : item.slice()
+      );
+      const variant = makePattern(
+        `${correct.id}-near-${groupIndex}-${replacementIndex}`,
+        correct.meter,
+        correct.group,
+        "near rhythm",
+        beamGroups,
+        hitsFromBeamGroups(beamGroups)
+      );
+      if (totalBeamDuration(variant.beamGroups) !== totalBeamDuration(correct.beamGroups)) return;
+      variants.push({ pattern: variant, score: rhythmSimilarityScore(correct, variant) });
+    });
+  });
+
+  return variants
+    .sort((a, b) => a.score - b.score)
+    .map((item) => item.pattern)
+    .filter((item, index, array) => array.findIndex((other) => rhythmKey(other) === rhythmKey(item)) === index)
+    .filter((item) => rhythmKey(item) !== rhythmKey(correct));
+}
+
+function getGroupReplacementMap(meter) {
+  const quarterGroups = {
+    C4: ["C2C2", "z4", "C3C", "CC3"],
+    z4: ["C4", "C2C2"],
+    C8: ["C4", "C2C2"],
+    C2C2: ["C4", "C2CC", "C2C2-", "C3C"],
+    C2CC: ["C2C2", "CCCC", "C3C", "CC3"],
+    CCCC: ["C2CC", "C2C2", "C4"],
+    C3C: ["CC3", "C2CC", "C4"],
+    CC3: ["C3C", "C2CC", "C4"],
+    C6C2: ["C3C", "C4", "C2C2"],
+    "C4-": ["C4", "C2C2-"],
+    "C2C2-": ["C2C2", "C4-"],
+    "(3C2C2C2": ["C2C2", "C2CC", "CCCC"]
+  };
+
+  if (meter !== "6/8") return quarterGroups;
+
+  return {
+    C2C2C2: ["C6", "CCC2C2", "C2C2CC", "C3CC2"],
+    C6: ["C2C2C2", "C3CC2", "CC3C2"],
+    CCC2C2: ["C2C2C2", "CCCCCC", "C3CC2"],
+    C2C2CC: ["C2C2C2", "C2CCC", "CC3C2"],
+    C2CCC: ["C2C2CC", "C2C2C2"],
+    CCCCCC: ["CCC2C2", "C2C2C2"],
+    C3CC2: ["CC3C2", "C2C2C2", "CCC2C2"],
+    CC3C2: ["C3CC2", "C2C2C2", "C2C2CC"],
+    C3CC3C: ["C3CC2", "CC3C2", "C2C2C2"],
+    "C2C2C2-": ["C2C2C2", "C6-"],
+    "C6-": ["C6", "C2C2C2-"],
+    "(3C2C2C2C2": ["C2C2C2", "CCC2C2", "CCCCCC"]
+  };
+}
+
+function hitsFromBeamGroups(beamGroups) {
+  const hits = [];
+  let cursor = 0;
+  beamGroups.forEach((group) => {
+    group.forEach((token) => {
+      parseRhythmToken(token).forEach((hit) => {
+        hits.push(cursor + hit.offset);
+      });
+      cursor += rhythmTokenDuration(token);
+    });
+  });
+  return hits;
+}
+
+function parseRhythmToken(token) {
+  const stripped = String(token).replace(/-/g, "");
+  const triplet = stripped.startsWith("(3");
+  const body = triplet ? stripped.slice(2) : stripped;
+  const unit = triplet ? 4 / 3 : 1;
+  const hits = [];
+  let offset = 0;
+
+  for (let index = 0; index < body.length; index += 1) {
+    const char = body[index];
+    if (char === "C") {
+      hits.push({ offset });
+      const next = body[index + 1];
+      offset += /[0-9]/.test(next || "") ? Number(next) * unit : unit;
+      if (/[0-9]/.test(next || "")) index += 1;
+    } else if (char === "z") {
+      const next = body[index + 1];
+      offset += /[0-9]/.test(next || "") ? Number(next) * unit : unit;
+      if (/[0-9]/.test(next || "")) index += 1;
+    } else if (/[0-9]/.test(char)) {
+      offset += Number(char) * unit;
+    }
+  }
+
+  return hits;
+}
+
+function rhythmTokenDuration(token) {
+  const parsed = parseRhythmToken(token);
+  const stripped = String(token).replace(/-/g, "");
+  const triplet = stripped.startsWith("(3");
+  const body = triplet ? stripped.slice(2) : stripped;
+  const unit = triplet ? 4 / 3 : 1;
+  let duration = 0;
+
+  for (let index = 0; index < body.length; index += 1) {
+    const char = body[index];
+    if (char === "C" || char === "z") {
+      const next = body[index + 1];
+      duration += /[0-9]/.test(next || "") ? Number(next) * unit : unit;
+      if (/[0-9]/.test(next || "")) index += 1;
+    } else if (/[0-9]/.test(char)) {
+      duration += Number(char) * unit;
+    }
+  }
+
+  return duration || (parsed.length ? Math.max(...parsed.map((hit) => hit.offset)) + unit : 0);
+}
+
+function totalBeamDuration(beamGroups) {
+  return beamGroups.reduce((sum, group) => (
+    sum + group.reduce((groupSum, token) => groupSum + rhythmTokenDuration(token), 0)
+  ), 0);
+}
+
+function rhythmKey(pattern) {
+  return `${pattern.meter}|${flatBody(pattern)}`;
 }
 
 function rhythmSimilarityScore(a, b) {
