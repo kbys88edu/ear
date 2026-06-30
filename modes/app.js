@@ -214,6 +214,10 @@ instrumentSelect.addEventListener("change", () => {
   setStatus(`音色：${instrumentSelect.options[instrumentSelect.selectedIndex].text}`);
 });
 
+document.addEventListener("earTrainingLanguageChanged", () => {
+  refreshModeLabels();
+});
+
 function init() {
   renderModeOptions();
   renderAnswerButtons();
@@ -221,12 +225,38 @@ function init() {
   updateScore();
 }
 
+function getCurrentLanguage() {
+  return window.EarTrainingLang?.getLanguage?.() || localStorage.getItem("earTrainingLanguage") || "ja";
+}
+
+function formatModeName(mode) {
+  return getCurrentLanguage() === "ja" ? `${mode.name} / ${mode.ja}` : mode.name;
+}
+
+function refreshModeLabels() {
+  document.querySelectorAll("#mode-options label").forEach((label) => {
+    const input = label.querySelector("input");
+    const text = label.querySelector("span");
+    const mode = modes.find((item) => item.id === input?.value);
+    if (mode && text) text.textContent = formatModeName(mode);
+  });
+
+  document.querySelectorAll("#answer-buttons button").forEach((button) => {
+    const mode = modes.find((item) => item.id === button.dataset.answer);
+    if (mode) button.textContent = formatModeName(mode);
+  });
+}
+
 function renderModeOptions() {
+  const selected = new Set(
+    Array.from(modeOptions.querySelectorAll("input:checked")).map((input) => input.value)
+  );
   modeOptions.innerHTML = "";
   modes.forEach((mode) => {
     const label = document.createElement("label");
     label.className = "choice-check";
-    label.innerHTML = `<input type="checkbox" value="${mode.id}" /><span>${mode.name} / ${mode.ja}</span>`;
+    const checked = selected.has(mode.id) ? " checked" : "";
+    label.innerHTML = `<input type="checkbox" value="${mode.id}"${checked} /><span>${formatModeName(mode)}</span>`;
     modeOptions.appendChild(label);
   });
 }
@@ -237,7 +267,7 @@ function renderAnswerButtons() {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.answer = mode.id;
-    button.textContent = `${mode.name} / ${mode.ja}`;
+    button.textContent = formatModeName(mode);
     button.addEventListener("click", () => answer(mode.id));
     answerButtons.appendChild(button);
   });
@@ -507,9 +537,9 @@ function answer(modeId) {
 
   if (isCorrect) {
     correctCount += 1;
-    setStatus(`正解：${currentQuestion.mode.name}${timeText}`, "correct");
+    setStatus(`${t("正解")}：${formatModeName(currentQuestion.mode)}${timeText}`, "correct");
   } else {
-    setStatus(`不正解：選択 ${selectedMode?.name || ""} / 正解 ${currentQuestion.mode.name}${timeText}`, "incorrect");
+    setStatus(`${t("不正解")}：${t("選択")} ${selectedMode ? formatModeName(selectedMode) : ""} / ${t("正解")} ${formatModeName(currentQuestion.mode)}${timeText}`, "incorrect");
   }
 
   currentTimeEl.textContent = latestResponseTimeSec !== null ? `${latestResponseTimeSec.toFixed(1)}s` : "--";
@@ -590,7 +620,7 @@ function showAnswerAndNotation() {
   }
 
   const tonicName = midiToToneNote(currentQuestion.tonicMidi);
-  answerText.textContent = `正解：${tonicName} ${currentQuestion.mode.name} / ${currentQuestion.mode.ja} / ${getQuestionTypeLabel(currentQuestion.questionType)}`;
+  answerText.textContent = `${t("正解")}：${tonicName} ${formatModeName(currentQuestion.mode)} / ${getQuestionTypeLabel(currentQuestion.questionType)}`;
   const phraseText = currentQuestion.phraseIndex !== null ? ` / Phrase ${currentQuestion.phraseIndex + 1}` : "";
   analysisText.textContent = `特徴音：${currentQuestion.mode.feature} / 構成：${currentQuestion.mode.degrees} / 聴き方：${currentQuestion.mode.comment}${phraseText}`;
 
