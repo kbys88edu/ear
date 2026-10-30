@@ -310,6 +310,18 @@ function checkAnswer() {
     responseTimeSec: latestResponseTimeSec
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "key-signatures",
+      toolLabel: "調号",
+      question: `${last.questionTypeLabel} / ${last.correctAnswer}`,
+      answer: last.userAnswer || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   updateScore();
   renderHistory();
 }

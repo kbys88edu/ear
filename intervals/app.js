@@ -152,7 +152,7 @@ function newQuestion() {
 
   // 問題ごとにタイポグラフィが変化すると、視覚情報から推測できるため固定します。
   questionDisplay.textContent = "LISTEN";
-  bigNote.textContent = "C";
+  if (bigNote) bigNote.textContent = "C";
   setStatus(t("問題を作成しました。再生します。"));
   playCurrentQuestion();
 }
@@ -358,6 +358,18 @@ function answer(intervalId) {
     lowerNote: midiToToneNote(currentQuestion.lowerMidi),
     upperNote: midiToToneNote(currentQuestion.upperMidi)
   });
+
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "intervals",
+      toolLabel: "音程",
+      question: `${last.modeLabel} / ${last.intervalName}`,
+      answer: last.selectedName || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
 
   markAnswerButtons(intervalId, isCorrect);
   updateScore();

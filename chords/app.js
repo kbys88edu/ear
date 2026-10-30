@@ -746,6 +746,18 @@ function answer(choiceId) {
     responseTimeSec: latestResponseTimeSec
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "chords",
+      toolLabel: "和音",
+      question: last.correctLabel,
+      answer: last.selectedLabel || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   updateScore();
   renderHistory();
 
