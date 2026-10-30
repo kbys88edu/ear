@@ -3,18 +3,18 @@
 }
 
 :root {
-  --bg: #dedede;
-  --ink: #2b2b2b;
-  --muted: #686868;
-  --line: #2f2f2f;
-  --soft-line: rgba(47, 47, 47, 0.28);
-  --panel: rgba(235, 235, 235, 0.72);
-  --success: #205a38;
-  --error: #8a2020;
+  --bg: #eef3ea;
+  --ink: #22392c;
+  --muted: #5f6b63;
+  --line: #22392c;
+  --soft-line: rgba(34, 57, 44, 0.28);
+  --panel: rgba(247, 250, 244, 0.72);
+  --success: #2f7a4f;
+  --error: #b5541c;
 }
 
 html {
-  font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  font-family: "IBM Plex Sans JP", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
   background: var(--bg);
   color: var(--ink);
 }
@@ -37,7 +37,7 @@ button {
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 button:hover {
@@ -93,7 +93,7 @@ select {
 .panel-title,
 .field-label {
   font-size: 0.60rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -117,7 +117,7 @@ select {
   gap: 4px;
   flex-wrap: wrap;
   text-align: right;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.06em;
   min-width: 0;
 }
@@ -129,7 +129,7 @@ select {
   border: 1px solid var(--soft-line);
   padding: 2px 5px;
   font-size: 0.54rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.1;
 }
@@ -152,7 +152,7 @@ select {
   padding: 2px 5px;
   font-size: 0.54rem;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
   min-height: auto;
 }
 
@@ -198,7 +198,7 @@ select {
   display: grid;
   gap: 3px;
   font-size: 0.62rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .mode-stack label {
@@ -254,7 +254,7 @@ select {
 
 .display-label {
   font-size: 0.54rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--muted);
 }
@@ -262,7 +262,7 @@ select {
 .question-display {
   margin-top: 4px;
   font-size: clamp(26px, 3.2vw, 38px);
-  font-weight: 900;
+  font-weight: 700;
   line-height: 0.9;
   letter-spacing: -0.08em;
 }
@@ -324,7 +324,7 @@ select {
 .score-strip span {
   display: block;
   font-size: 0.43rem;
-  font-weight: 900;
+  font-weight: 700;
   color: var(--muted);
   margin-bottom: 1px;
   white-space: nowrap;
@@ -378,12 +378,12 @@ select {
 
 .choice-card.selected-correct {
   border-color: var(--success);
-  background: rgba(32,90,56,0.16);
+  background: rgba(47, 122, 79,0.16);
 }
 
 .choice-card.selected-incorrect {
   border-color: var(--error);
-  background: rgba(138,32,32,0.16);
+  background: rgba(181, 84, 28,0.16);
 }
 
 .choice-top {
@@ -395,7 +395,7 @@ select {
 
 .choice-label {
   font-size: 0.92rem;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
   min-width: 18px;
 }
@@ -403,7 +403,7 @@ select {
 .choice-roman {
   font-size: clamp(0.86rem, 1.05vw, 1.06rem);
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.02em;
   white-space: nowrap;
   overflow: hidden;
@@ -412,7 +412,7 @@ select {
 
 .choice-meta {
   font-size: 0.54rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
@@ -424,7 +424,7 @@ select {
   height: 100%;
   overflow: hidden;
   background: #ffffff;
-  border: 1px solid rgba(47,47,47,0.18);
+  border: 1px solid rgba(34, 57, 44,0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -482,7 +482,7 @@ select {
   margin: 2px 0 0;
   font-size: 0.56rem;
   color: var(--muted);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.25;
 }
 
@@ -494,7 +494,7 @@ select {
   height: 66px;
   overflow: hidden;
   background: #ffffff;
-  border: 1px solid rgba(47,47,47,0.18);
+  border: 1px solid rgba(34, 57, 44,0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -513,7 +513,7 @@ select {
   display: grid;
   gap: 3px;
   font-size: 0.56rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .history-item {
@@ -1026,7 +1026,7 @@ select {
     max-height: none;
     overflow: hidden;
     background: #fff;
-    border: 1px solid rgba(47,47,47,0.18);
+    border: 1px solid rgba(34, 57, 44,0.18);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1074,7 +1074,7 @@ select {
     min-height: 0;
     overflow: hidden;
     background: #fff;
-    border: 1px solid rgba(47,47,47,0.18);
+    border: 1px solid rgba(34, 57, 44,0.18);
     display: flex;
     align-items: center;
     justify-content: center;

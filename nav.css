@@ -5,21 +5,21 @@
   z-index: 20;
   width: 28px;
   height: 28px;
-  border: 1px solid var(--soft-line, rgba(47, 47, 47, 0.28));
-  background: var(--bg, #dedede);
-  color: var(--ink, #2b2b2b);
+  border: 1px solid var(--soft-line, rgba(34, 57, 44, 0.28));
+  background: var(--bg, #eef3ea);
+  color: var(--ink, #22392c);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   font-size: 1rem;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .index-back:hover {
-  background: var(--ink, #2b2b2b);
-  color: var(--bg, #dedede);
+  background: var(--ink, #22392c);
+  color: var(--bg, #eef3ea);
 }
 
 .topbar {
@@ -27,8 +27,8 @@
   column-gap: 12px;
   position: relative;
   z-index: 2;
-  background: var(--bg, #dedede);
-  border-bottom: 1px solid var(--soft-line, rgba(47, 47, 47, 0.28));
+  background: var(--bg, #eef3ea);
+  border-bottom: 1px solid var(--soft-line, rgba(34, 57, 44, 0.28));
   padding-bottom: 6px;
 }
 
@@ -74,7 +74,7 @@
 .top-count #progress-count {
   border: 1px solid transparent;
   font-size: 0.58rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .top-count .language-toggle {

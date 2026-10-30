@@ -3,19 +3,19 @@
 }
 
 :root {
-  --bg: #dedede;
-  --ink: #2b2b2b;
-  --muted: #686868;
-  --line: #2f2f2f;
-  --soft-line: rgba(47, 47, 47, 0.28);
-  --panel: rgba(235, 235, 235, 0.72);
+  --bg: #eef3ea;
+  --ink: #22392c;
+  --muted: #5f6b63;
+  --line: #22392c;
+  --soft-line: rgba(34, 57, 44, 0.28);
+  --panel: rgba(247, 250, 244, 0.72);
   --light: rgba(255, 255, 255, 0.42);
-  --success: #205a38;
-  --error: #8a2020;
+  --success: #2f7a4f;
+  --error: #b5541c;
 }
 
 html {
-  font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  font-family: "IBM Plex Sans JP", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
   background: var(--bg);
   color: var(--ink);
 }
@@ -94,7 +94,7 @@ select {
 .panel-title,
 .field-label {
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.01em;
   text-transform: uppercase;
 }
@@ -107,7 +107,7 @@ select {
 
 .top-count {
   text-align: right;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
@@ -199,7 +199,7 @@ select {
   gap: 6px;
   align-items: center;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   background: rgba(255,255,255,0.22);
 }
 
@@ -250,7 +250,7 @@ select {
 
 .display-label {
   font-size: 0.64rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--muted);
 }
@@ -258,7 +258,7 @@ select {
 .question-display {
   margin-top: 8px;
   font-size: clamp(38px, 5.8vw, 78px);
-  font-weight: 900;
+  font-weight: 700;
   line-height: 0.95;
   letter-spacing: -0.08em;
 }
@@ -303,7 +303,7 @@ select {
 .score-strip span {
   display: block;
   font-size: 0.58rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--muted);
   margin-bottom: 4px;
 }
@@ -755,7 +755,7 @@ select {
   border: 1px solid var(--soft-line);
   padding: 3px 6px;
   font-size: 0.64rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
 }
 
@@ -943,26 +943,26 @@ select {
 /* Language toggle */
 .language-toggle {
   display: inline-flex;
-  border: 1px solid var(--soft-line, rgba(47,47,47,0.28));
+  border: 1px solid var(--soft-line, rgba(34, 57, 44,0.28));
   margin-right: 4px;
 }
 
 .lang-btn {
   border: 0;
   background: transparent;
-  color: var(--ink, #2b2b2b);
+  color: var(--ink, #22392c);
   padding: 3px 6px;
   font-size: 0.62rem;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.06em;
   min-height: auto;
 }
 
 .lang-btn:hover,
 .lang-btn.active {
-  background: var(--ink, #2b2b2b);
-  color: var(--bg, #dedede);
+  background: var(--ink, #22392c);
+  color: var(--bg, #eef3ea);
 }
 
 
