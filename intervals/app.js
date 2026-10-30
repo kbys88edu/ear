@@ -152,7 +152,7 @@ function newQuestion() {
 
   // 問題ごとにタイポグラフィが変化すると、視覚情報から推測できるため固定します。
   questionDisplay.textContent = "LISTEN";
-  bigNote.textContent = "C";
+  if (bigNote) bigNote.textContent = "C";
   setStatus(t("問題を作成しました。再生します。"));
   playCurrentQuestion();
 }
