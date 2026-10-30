@@ -378,6 +378,18 @@ function answer(scaleId) {
     notes: currentQuestion.midiNotes.map(midiToToneNote)
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "minor-scales",
+      toolLabel: "短音階",
+      question: `${last.modeLabel} / ${last.scaleName}（${last.tonicNote}）`,
+      answer: last.selectedName || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   markAnswerButtons(scaleId, isCorrect);
   updateScore();
   renderHistory();

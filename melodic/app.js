@@ -713,6 +713,18 @@ function answer(choiceId) {
     responseTimeSec: latestResponseTimeSec
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "melodic",
+      toolLabel: "旋律聴音",
+      question: `${last.meter} / ${last.keyLabel} / ${last.harmony}`,
+      answer: last.selectedContour || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   updateScore();
   renderHistory();
   showAnswer();

@@ -562,6 +562,18 @@ function answer(modeId) {
     midiNotes: currentQuestion.midiNotes
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "modes",
+      toolLabel: "教会旋法",
+      question: `${last.questionTypeLabel} / ${last.modeName}`,
+      answer: last.selectedName || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   markAnswerButtons(modeId, isCorrect);
   updateScore();
   renderHistory();

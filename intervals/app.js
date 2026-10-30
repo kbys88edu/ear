@@ -359,6 +359,18 @@ function answer(intervalId) {
     upperNote: midiToToneNote(currentQuestion.upperMidi)
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "intervals",
+      toolLabel: "音程",
+      question: `${last.modeLabel} / ${last.intervalName}`,
+      answer: last.selectedName || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   markAnswerButtons(intervalId, isCorrect);
   updateScore();
   renderHistory();

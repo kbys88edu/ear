@@ -259,6 +259,18 @@ function checkAnswer() {
     responseTimeSec: latestResponseTimeSec
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "related-keys",
+      toolLabel: "近親調",
+      question: `${last.tonic}`,
+      answer: last.detail || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   applyCheckFeedback(results);
   showAnswerSummary();
   updateScore();

@@ -747,6 +747,18 @@ function answer(choiceId) {
     responseTimeSec: latestResponseTimeSec
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "progressions",
+      toolLabel: "コード進行",
+      question: `${last.label} (${last.roman})`,
+      answer: last.selectedRoman || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   updateScore();
   renderHistory();
   showAnswer();

@@ -14,8 +14,9 @@ Published structure:
 - `/modes/` mode trainer (10 phrase variants per mode)
 - `/key-signatures/` key signature trainer
 - `/rhythm/` rhythm dictation trainer
+- `/log/` study log: every answer is recorded in the browser (localStorage); the daily report can be printed to PDF, copied as text or shared by e-mail
 
-Shared files: `style.css` and `nav.css` (index layout and the back button / topbar), `lang.js` (JA / EN / FR toggle), `assets/`.
+Shared files: `style.css` and `nav.css` (index layout and the back button / topbar), `lang.js` (JA / EN / FR toggle), `study-log.js` / `study-log.css` (study log), `assets/`.
 Each trainer folder has its own `index.html`, `app.js` and `style.css`.
 
 ## Notes

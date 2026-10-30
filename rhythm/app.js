@@ -554,6 +554,18 @@ function answer(choiceId) {
     responseTimeSec: latestResponseTimeSec
   });
 
+  if (window.StudyLog) {
+    const last = resultLog[resultLog.length - 1];
+    window.StudyLog.record({
+      tool: "rhythm",
+      toolLabel: "リズム",
+      question: `${last.meter} / ${last.label}`,
+      answer: last.selectedLabel || "",
+      ok: last.isCorrect,
+      timeSec: last.responseTimeSec
+    });
+  }
+
   updateScore();
   renderHistory();
   showAnswer();
